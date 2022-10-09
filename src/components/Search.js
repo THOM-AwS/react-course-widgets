@@ -3,7 +3,17 @@ import axios from 'axios';
 
 const Search = () => {
     const [term, setTerm] = useState('');
+    const [debouncedTerm, setDebouncedTerm] = useState(term);
     const [results, setResults] = useState([]);
+
+    useEffect(() => {
+        const timerId = setTimeout(() => {
+            setDebouncedTerm(term);
+        }, 1000);
+        return () => {
+            clearTimeout(timerId);
+        };
+    }, [term]);
 
     useEffect(() => {
         const search = async () => {
@@ -13,15 +23,16 @@ const Search = () => {
                     list: 'search',
                     origin: '*',
                     format: 'json',
-                    srsearch: term,
+                    srsearch: debouncedTerm,
                 },
             });
+
             setResults(data.query.search);
         };
-        if (term) {
+        if (debouncedTerm) {
             search();
         }
-    }, [term]);
+    }, [debouncedTerm]);
 
     const renderedResults = results.map((result) => {
         return (
@@ -33,7 +44,7 @@ const Search = () => {
                     <div className="header">
                         {result.title}
                     </div>
-                    <span dangerouslySetInnerHTML={{ __html: result.snippet}}></span>
+                    <span dangerouslySetInnerHTML={{ __html: result.snippet }}></span>
                 </div>
             </div>
         )
@@ -45,7 +56,7 @@ const Search = () => {
                 <label>Enter Search Term</label>
                 <input className="input" value={term} onChange={(e) => setTerm(e.target.value)} />
             </div>
-            <div className="ui celled list">{ renderedResults }</div>
+            <div className="ui celled list">{renderedResults}</div>
         </div>
     )
 };
