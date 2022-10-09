@@ -38,7 +38,7 @@ const Search = () => {
         return (
             <div className="item" key={result.pageid}>
                 <div className="right floated content">
-                    <a className="ui button" href={`https://en.wikipedia.org?curid=${result.pageid}`}>Go -></a>
+                    <a className="ui button" href={`https://en.wikipedia.org?curid=${result.pageid}`}>Go -{">"}</a>
                 </div>
                 <div className="content">
                     <div className="header">
